@@ -1,0 +1,24 @@
+model {
+
+    for (i in 1:N) {
+        for (k in 1:K) {
+            log(u[i, k]) <- beta[1]*pow(ideol[i,k], 2) + beta[2]*pow(nacl[i,k], 2) + cons[k]
+            p[i, k] <- u[i,k]/sum(u[i,1:K])
+        }
+
+        voto[i, 1:K] ~ dmulti(p[i, 1:K], 1)
+    }
+
+
+    for (p in 1:2) {
+        beta[p] ~ dnorm(0, 10E-6)
+    }
+
+    cons[1] <- 0
+    for (k in 2:K) {
+        cons[k] ~ dnorm(0, 10E-6)
+        omega[k-1] <- cons[k]
+    }
+
+}
+
